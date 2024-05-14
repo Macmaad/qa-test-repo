@@ -8,3 +8,4 @@ Testing the idea of linear commit history
 Adding an extra commit for this
 
 Adding commit 1
+Adding commit 2
