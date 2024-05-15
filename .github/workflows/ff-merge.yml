@@ -1,0 +1,38 @@
+name: "Keep linear history"
+
+on:
+    pull_request_review:
+        types:
+            - submitted
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.ref == 'qa'
+    steps:
+        - name: Clone Repository
+          uses: actions/checkout@v3
+          with:
+            ref: qa
+            fetch-depth: 0
+        - name: Fast-Forward Merge
+          run: |
+            set +e
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "GitHub Actions [Bot]"
+            git pull
+            git checkout main
+            git merge qa --ff-only
+            if [ $? -ne 0 ]
+                then
+                echo "error=Unable to merge with fast forward! \
+                    All feature branches must be based on main, and conflicts should be solved." >> $GITHUB_ENV \
+                exit 1
+            fi
+            git push
+            if [ $? -ne 0 ]
+                then
+                echo "error=Unable to push to main! Make sure all required checks are successful and you have two PR \
+                    approvals, with at least one of them coming from a code owner." >> $GITHUB_ENV
+                exit 1
+            fi
