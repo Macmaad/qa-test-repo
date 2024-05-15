@@ -16,9 +16,6 @@ jobs:
             token: ${{ secrets.GH_ACCESS_TOKEN }}
             ref: qa
             fetch-depth: 0
-        - name: Check approves
-          run: |
-            set +e
         - name: Fast-Forward Merge
           run: |
             set +e
