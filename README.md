@@ -10,3 +10,4 @@ Adding basic workflow to be tested with ff-merge
     4.2 Commit 2
     4.3 Commit 3
     4.4 Commit 4
+    4.5 Commit 5
