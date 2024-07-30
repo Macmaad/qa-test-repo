@@ -1,0 +1,26 @@
+# Use the super-linter action to find potential errors in SQL statements and reduce the risk of a bad changeset making
+# its way to QA.
+name: Lint SQL
+
+on:
+  pull_request:
+    branches: [ main, qa ]
+    types: [ opened, reopened, synchronize ]
+
+jobs:
+  build:
+    name: Lint SQL changelogs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Lint Code Base
+        uses: super-linter/super-linter@v5.7.2
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_SQLFLUFF: true
+          SQLFLUFF_CONFIG_FILE: .sqlfluff
