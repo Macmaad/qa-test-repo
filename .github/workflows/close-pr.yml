@@ -18,9 +18,17 @@ jobs:
             let {data: pullRequests} = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              state: 'open'
             })
+
             for (pr of pullRequests) {
-              console.log(pr.created_at)
+              if (pr.base.ref == 'main' && pr.head.ref == 'qa') {
+                console.log('PR from QA to MAIN should not be closed')
+
+                continue
+              }
+
+              console.log(`Checking age of PR on branch: ${pr.head.ref}`)
 
               let prDate = new Date(pr.created_at)
               let currentDate = new Date()
@@ -32,9 +40,12 @@ jobs:
               console.log(daysDiff)
 
               if (daysDiff > 1) {
-                console.log('should close PR')
-              } else {
-                console.log('no close')
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_numer: pr.number,
+                  state: 'closed'
+                })
               }
             }
 
