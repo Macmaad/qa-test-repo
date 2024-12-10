@@ -1,0 +1,25 @@
+name: Rever PR
+
+on:
+  label:
+    types: [created]
+
+jobs :
+  revert-change:
+    name: RevertPR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # check out the current and prior state
+      - name: "Revert the commit that triggered this run, then push it to main"
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git fetch origin main
+          git checkout -b revert-pr-$PR_NUMBER
+
+          git revert -m 1 $(git log -1 --pretty=format:%H)
+
+          git push origin revert-pr-$PR_NUMBER
