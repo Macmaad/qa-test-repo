@@ -23,3 +23,5 @@ jobs :
           git revert -m 1 $(git log -1 --pretty=format:%H)
 
           git push origin revert-pr-$PR_NUMBER
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
