@@ -4,6 +4,8 @@ on:
   label:
     types: [created]
 
+permissions: write-all
+
 jobs :
   revert-change:
     name: RevertPR
